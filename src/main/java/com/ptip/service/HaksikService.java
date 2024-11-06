@@ -1,6 +1,6 @@
 package com.ptip.service;
 
-import com.ptip.Mapper.HaksikMapper;
+import com.ptip.mapper.HaksikMapper;
 import com.ptip.models.Haksik;
 import org.springframework.stereotype.Service;
 
