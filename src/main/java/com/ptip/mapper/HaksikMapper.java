@@ -1,4 +1,4 @@
-package com.ptip.Mapper;
+package com.ptip.mapper;
 
 
 import com.ptip.models.Haksik;
