@@ -5,17 +5,19 @@ public class Course {
     private String course_no;
     private String title;
     private String course_type;
+    private int credit;
+    private int grade;
     private String course_time;
     private String classroom;
     private String major;
     private String professor;
 
-    Course(){};
-
-    public Course(String course_no, String title, String course_type, String course_time, String classroom, String major, String professor) {
+    public Course(String course_no, String title, String course_type, int credit, int grade, String course_time, String classroom, String major, String professor) {
         this.course_no = course_no;
         this.title = title;
         this.course_type = course_type;
+        this.credit = credit;
+        this.grade = grade;
         this.course_time = course_time;
         this.classroom = classroom;
         this.major = major;
@@ -46,6 +48,21 @@ public class Course {
         this.course_type = course_type;
     }
 
+    public int getCredit() {
+        return credit;
+    }
+
+    public void setCredit(int credit) {
+        this.credit = credit;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
 
     public String getCourse_time() {
         return course_time;
