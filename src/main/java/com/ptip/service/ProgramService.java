@@ -12,13 +12,11 @@ public class ProgramService {
     @Autowired
     private ProgramMapper programMapper;
 
-    // 프로그램명으로 검색
-    public List<Program> searchByProgramName(String programName) {
-        return programMapper.searchByProgramName(programName);
+    public List<Program> searchById(Integer id) {
+        return programMapper.searchById(id);
     }
 
-    // 포인트 범위로 필터링
-    public List<Program> filterByPoint(int point) {
-        return programMapper.filterByPoint(point);
+    public List<Program> searchPrograms(String name, Integer point, String department) {
+        return programMapper.searchPrograms(name, point, department);
     }
 }

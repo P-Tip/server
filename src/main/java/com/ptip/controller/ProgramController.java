@@ -16,15 +16,18 @@ public class ProgramController {
     @Autowired
     private ProgramService programService;
 
-    // 프로그램명을 통한 검색
-    @GetMapping("/program/search")
-    public List<Program> searchByProgramName(@RequestParam("name") String programName) {
-        return programService.searchByProgramName(programName);
+    @GetMapping("")
+    public List<Program> searchById(@RequestParam(value = "id", required = false) Integer id) {
+        return programService.searchById(id);
     }
 
-    // 포인트 필터링
-    @GetMapping("/program/filter")
-    public List<Program> filterByPoint(@RequestParam("point") int point) {
-        return programService.filterByPoint(point);
+    // 통합된 검색 및 필터링 API
+    @GetMapping("/search")
+    public List<Program> searchPrograms(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "point", required = false) Integer point,
+            @RequestParam(value = "department", required = false) String department
+    ) {
+        return programService.searchPrograms(name, point, department);
     }
 }
