@@ -15,4 +15,5 @@ public interface HaksikMapper {
 
     @Select("SELECT * FROM haksik.haksik WHERE #{startdate} <= date && date <= #{enddate} ORDER BY date ASC")
     List<Haksik> getHaksikByRange(@Param("startdate") String startdate, @Param("enddate") String enddate);
+
 }

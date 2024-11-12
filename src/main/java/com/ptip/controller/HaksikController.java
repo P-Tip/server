@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -51,6 +48,14 @@ public class HaksikController {
         LocalDate friday = today.with(DayOfWeek.FRIDAY);
         return haksikService.getHaksikbyRange(monday.format(dateFormatter),friday.format(dateFormatter));
 
+    }
+
+    @GetMapping("/upcoming")
+    public List<Haksik> upcomingHaksik(){
+        LocalTime now = nowInKorea.toLocalTime();
+        LocalDate today = nowInKorea.toLocalDate();
+        LocalDate tomorrow = today.plusDays(1);
+        return haksikService.getUpcomingHaksik(now,today.format(dateFormatter),tomorrow.format(dateFormatter));
     }
 
 }
