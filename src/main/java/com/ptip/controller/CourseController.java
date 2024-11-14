@@ -23,45 +23,20 @@ public class CourseController {
 
     // 검색유형으로 과목명, 교수명, 학수번호 중 하나를 골라서 검색
     @GetMapping("/search")
-    public List<Course> getByCourseNo(@RequestParam("searchType") String searchType, @RequestParam("input") String input) {
-        if (searchType.equals("과목명")) {
-            return courseService.searchByTitle(input);
-        } else if (searchType.equals("교수명")) {
-            return courseService.searchByCourseNo(input);
-        } else if (searchType.equals("학수번호")) {
-            return courseService.searchByProfessor(input);
-        } else {
-            throw new IllegalArgumentException("searchType parameter is required one of the following: 과목명, 교수명, 학수번호.");
-        }
-    }
-
-    // 해당 학점으로 찾기
-    @GetMapping("/find/credit")
-    public List<Course> getByCredit(@RequestParam("credit") int credit) {
-        return courseService.findByCredit(credit);
-    }
-
-    // 해당 학년으로 찾기
-    @GetMapping("/find/grade")
-    public List<Course> getByGrade(@RequestParam("grade") int grade) {
-        return courseService.findByGrade(grade);
+    public List<Course> getCourse(
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "professor", required = false) String professor,
+            @RequestParam(value = "courseNo", required = false) String courseNo,
+            @RequestParam(value = "credit", required = false) String credit,
+            @RequestParam(value = "grade", required = false) String grade,
+            @RequestParam(value = "courseType", required = false) String courseType,
+            @RequestParam(value = "major", required = false) String major) {
+        return courseService.searchCourse(title, professor, courseNo, credit, grade, courseType, major);
     }
 
     // 강의 시간으로 찾기
     @GetMapping("/find/time")
     public List<Course> getByGrade(@RequestParam("day") String day, @RequestParam("startTime") int startTime, @RequestParam("endTime") int endTime) {
         return courseService.findByTime(day, startTime, endTime);
-    }
-
-    // 전공/영역으로 필터링
-    @GetMapping("/filter")
-    public List<Course> getByCourseType(
-            @RequestParam("courseType") String courseType,
-            @RequestParam(value = "major", required = false) String major) {
-        if (courseType.equals("전공")) {
-            return courseService.filterByMajor(major);
-        } else {
-            return courseService.filterByCourseType(courseType);
-        }
     }
 }
