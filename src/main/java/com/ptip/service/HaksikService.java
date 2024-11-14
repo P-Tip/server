@@ -34,7 +34,7 @@ public class HaksikService {
         LocalTime firstHaksikEndTime = LocalTime.of(9, 30);
         LocalTime secondHaksikEndTime = LocalTime.of(14, 0);
 
-        List<Haksik> upcomingHaksikList = new ArrayList<>(2);
+        List<Haksik> upcomingHaksikList = new ArrayList<>();
 
         // today와 tomorrow를 LocalDate로 변환
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -47,27 +47,30 @@ public class HaksikService {
 
         // 현재 시간이 아침 식사 시간 전일 경우
         if (now.isBefore(firstHaksikEndTime)) {
-            // 월요일과 금요일에는 아침 메뉴가 제공되지 않음
-            if (todayDayOfWeek != 1 && todayDayOfWeek != 5) {
-                upcomingHaksikList.add(haksikList.get(0)); // 오늘 아침
-            }
-            upcomingHaksikList.add(haksikList.get(1)); // 오늘 점심
+
+            upcomingHaksikList.add(haksikList.get(0));
+            upcomingHaksikList.add(haksikList.get(1));
         }
         // 현재 시간이 점심 시간 전일 경우
         else if (now.isAfter(firstHaksikEndTime) && now.isBefore(secondHaksikEndTime)) {
             // 내일 아침이 제공되지 않는다면 점심만 제공
-            if (tomorrowDayOfWeek != 1 && tomorrowDayOfWeek != 5) {
-                upcomingHaksikList.add(haksikList.get(2)); // 내일 아침
+            if (todayDayOfWeek == 1) {
+                upcomingHaksikList.add(haksikList.get(0));
+                upcomingHaksikList.add(haksikList.get(1));
+            }else{
+                upcomingHaksikList.add(haksikList.get(1));
+                upcomingHaksikList.add(haksikList.get(2));
             }
-            upcomingHaksikList.add(haksikList.get(2)); // 내일 점심
         }
         // 현재 시간이 점심 시간 이후일 경우
         else {
             // 내일 아침이 제공되지 않는다면 점심만 제공
-            if (tomorrowDayOfWeek != 1 && tomorrowDayOfWeek != 5) {
-                upcomingHaksikList.add(haksikList.get(2)); // 내일 아침
+            if (tomorrowDayOfWeek == 5) {
+                upcomingHaksikList.add(haksikList.get(2));
+            }else {
+                upcomingHaksikList.add(haksikList.get(2));
+                upcomingHaksikList.add(haksikList.get(3));
             }
-            upcomingHaksikList.add(haksikList.get(3)); // 내일 점심
         }
 
         return (upcomingHaksikList != null) ? upcomingHaksikList : Collections.emptyList();
