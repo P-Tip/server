@@ -4,7 +4,6 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.List;
-import java.util.Map;
 
 public class CourseProvider {
     public String selectCourseDynamic(@Param("title") String title,
