@@ -34,7 +34,7 @@ public class CourseProvider {
                 WHERE("credit = #{credit}");
             }
             if (grade != null) {
-                WHERE("grade = #{grade}");
+                WHERE("grade <= #{grade}");
             }
             if (courseType != null) {
                 if (courseType.equals("전공")) {

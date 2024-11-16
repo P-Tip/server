@@ -10,4 +10,4 @@ public class PtipApplication {
 		SpringApplication.run(PtipApplication.class, args);
 	}
 
-}
+} 

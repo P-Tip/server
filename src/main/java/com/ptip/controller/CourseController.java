@@ -37,12 +37,15 @@ public class CourseController {
 
         List<Character> day = new ArrayList<>();
         List<String> period = new ArrayList<>();
-        for (String time : times) {
-            day.add(time.charAt(0));
-            if (day.size() == 1) {
-                period.add("123456789");
-            } else {
-                period.add(time.substring(1));
+
+        if (times != null) {
+            for (String time : times) {
+                day.add(time.charAt(0));
+                if (day.size() == 1) {
+                    period.add("123456789");
+                } else {
+                    period.add(time.substring(1));
+                }
             }
         }
 
