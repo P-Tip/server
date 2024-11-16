@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface CourseMapper {
@@ -18,11 +19,7 @@ public interface CourseMapper {
                               @Param("credit") String credit,
                               @Param("grade") String grade,
                               @Param("courseType") String courseType,
-                              @Param("major") String major);
-
-    @Select("SELECT course_no, title, course_type, credit, grade, course_time, classroom, name AS major, professor " +
-            "FROM course_schedule.course LEFT JOIN course_schedule.major ON course.major_id = major.id " +
-            "WHERE (course_time LIKE CONCAT(#{day}, '%')) AND (SUBSTR(course_time, 3, 1) BETWEEN #{startTime} AND #{endTime}) AND (RIGHT(course_time, 1) BETWEEN #{startTime} AND #{endTime})")
-    List<Course> selectByTime(@Param("day") String day, @Param("startTime") int startTime, @Param("endTime") int endTime);
-
+                              @Param("major") String major,
+                              @Param("day") List<Character> day,
+                              @Param("period") List<String> period);
 }
