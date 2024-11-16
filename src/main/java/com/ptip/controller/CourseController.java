@@ -2,13 +2,15 @@ package com.ptip.controller;
 
 import com.ptip.models.Course;
 import com.ptip.service.CourseService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/course")
@@ -30,13 +32,20 @@ public class CourseController {
             @RequestParam(value = "credit", required = false) String credit,
             @RequestParam(value = "grade", required = false) String grade,
             @RequestParam(value = "courseType", required = false) String courseType,
-            @RequestParam(value = "major", required = false) String major) {
-        return courseService.searchCourse(title, professor, courseNo, credit, grade, courseType, major);
-    }
+            @RequestParam(value = "major", required = false) String major,
+            @RequestParam(value = "times", required = false) List<String> times) {
 
-    // 강의 시간으로 찾기
-    @GetMapping("/find/time")
-    public List<Course> getByGrade(@RequestParam("day") String day, @RequestParam("startTime") int startTime, @RequestParam("endTime") int endTime) {
-        return courseService.findByTime(day, startTime, endTime);
+        List<Character> day = new ArrayList<>();
+        List<String> period = new ArrayList<>();
+        for (String time : times) {
+            day.add(time.charAt(0));
+            if (day.size() == 1) {
+                period.add("123456789");
+            } else {
+                period.add(time.substring(1));
+            }
+        }
+
+        return courseService.searchCourse(title, professor, courseNo, credit, grade, courseType, major, day, period);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CourseService {
@@ -17,12 +18,7 @@ public class CourseService {
         this.courseMapper = courseMapper;
     }
 
-    public  List<Course> searchCourse(String title, String professor, String courseNo, String credit, String grade, String courseType, String major) {
-        return courseMapper.selectCourse(title, professor, courseNo, credit, grade, courseType, major);
-    }
-
-    // 강의 시간으로 찾기
-    public  List<Course> findByTime(String day, int startTime, int endTime) {
-        return courseMapper.selectByTime(day, startTime, endTime);
+    public  List<Course> searchCourse(String title, String professor, String courseNo, String credit, String grade, String courseType, String major, List<Character> day, List<String> period) {
+        return courseMapper.selectCourse(title, professor, courseNo, credit, grade, courseType, major, day, period);
     }
 }
