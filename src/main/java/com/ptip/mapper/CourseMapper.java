@@ -3,11 +3,10 @@ package com.ptip.mapper;
 import com.ptip.models.Course;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+
 import org.apache.ibatis.annotations.SelectProvider;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface CourseMapper {
