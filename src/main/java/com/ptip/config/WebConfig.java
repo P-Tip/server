@@ -8,17 +8,21 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer {
 
+    @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")  // 모든 경로에 대해
-                .allowedOrigins("https://www.ptutip.p-e.kr")// Azure Static Web App URL
-                .allowedMethods("GET")
+        registry.addMapping("/**")
+                .allowedOrigins(
+                        "https://www.ptutip.p-e.kr",
+                        "https://ptutip.p-e.kr"   // www 없는 버전도 추가
+                )
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // 필요한 HTTP 메서드 모두 추가
                 .allowedHeaders("*")
-                //.allowCredentials(true)  // 쿠키 인증 정보 허용
-                .maxAge(3600);  // preflight 캐시 시간
+                .maxAge(3600);
     }
 
     @Bean
