@@ -14,7 +14,7 @@ public class WebConfig {
 
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")  // 모든 경로에 대해
-                .allowedOrigins("https://ptutip.p-e.kr")// Azure Static Web App URL
+                .allowedOrigins("https://www.ptutip.p-e.kr")// Azure Static Web App URL
                 .allowedMethods("GET")
                 .allowedHeaders("*")
                 //.allowCredentials(true)  // 쿠키 인증 정보 허용
