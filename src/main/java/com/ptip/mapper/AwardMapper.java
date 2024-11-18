@@ -26,6 +26,7 @@ public interface AwardMapper {
     @Select("<script>" +
             "SELECT department_name, location, internal_num " +
             "FROM department " +
+            "<if test='consonant != null and consonant != \"\"'>" +
             "WHERE CASE " +
             "    WHEN LEFT(department_name, 1) BETWEEN '가' AND '깋' THEN 'ㄱ' " +
             "    WHEN LEFT(department_name, 1) BETWEEN '나' AND '닣' THEN 'ㄴ' " +
@@ -41,7 +42,8 @@ public interface AwardMapper {
             "    WHEN LEFT(department_name, 1) BETWEEN '타' AND '팋' THEN 'ㅌ' " +
             "    WHEN LEFT(department_name, 1) BETWEEN '파' AND '핗' THEN 'ㅍ' " +
             "    WHEN LEFT(department_name, 1) BETWEEN '하' AND '힣' THEN 'ㅎ' " +
-            "    ELSE '' END = #{consonant}" +
+            "    ELSE '' END = #{consonant} " +
+            "</if>" +
             "</script>")
     List<Department> filterByFirstConsonant(@Param("consonant") String consonant);
 
