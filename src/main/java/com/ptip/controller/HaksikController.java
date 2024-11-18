@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -23,7 +22,6 @@ public class HaksikController {
 
     // 현재 시간 (한국 시간)
     private ZonedDateTime nowInKorea = ZonedDateTime.now(koreaZoneId);
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     public HaksikController(HaksikService haksikService) {
         this.haksikService = haksikService;
@@ -38,7 +36,7 @@ public class HaksikController {
     @GetMapping("/today")
     public List<Haksik> todayHaksik(){
         LocalDate today = nowInKorea.toLocalDate();
-        return haksikService.getHaksikByDate(today.format(dateFormatter));
+        return haksikService.getHaksikByDate(today.toString());
     }
 
     @GetMapping("/thisweek")
@@ -46,7 +44,7 @@ public class HaksikController {
         LocalDate today = nowInKorea.toLocalDate();
         LocalDate monday =  today.with(DayOfWeek.MONDAY);
         LocalDate friday = today.with(DayOfWeek.FRIDAY);
-        return haksikService.getHaksikbyRange(monday.format(dateFormatter),friday.format(dateFormatter));
+        return haksikService.getHaksikbyRange(monday,friday);
 
     }
 
@@ -55,7 +53,7 @@ public class HaksikController {
         LocalTime now = nowInKorea.toLocalTime();
         LocalDate today = nowInKorea.toLocalDate();
         LocalDate tomorrow = today.plusDays(1);
-        return haksikService.getUpcomingHaksik(now,today.format(dateFormatter),tomorrow.format(dateFormatter));
+        return haksikService.getUpcomingHaksik(now,today,tomorrow);
     }
 
 }

@@ -2,11 +2,11 @@ package com.ptip.service;
 
 import com.ptip.mapper.HaksikMapper;
 import com.ptip.models.Haksik;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,56 +24,71 @@ public class HaksikService {
         return (haksikList != null) ? haksikList : Collections.emptyList();
     }
 
-    public List<Haksik> getHaksikbyRange(String startdate, String enddate) {
-        List<Haksik> haksikList = haksikMapper.getHaksikByRange(startdate, enddate);
+    public List<Haksik> getHaksikbyRange(LocalDate startdate, LocalDate enddate) {
+        List<Haksik> haksikList = haksikMapper.getHaksikByRange(startdate.toString(), enddate.toString());
         return (haksikList != null) ? haksikList : Collections.emptyList();
     }
 
-    public List<Haksik> getUpcomingHaksik(LocalTime now, String today, String tomorrow) {
-        List<Haksik> haksikList = haksikMapper.getHaksikByRange(today, tomorrow);
+    public List<Haksik> getUpcomingHaksik(LocalTime now, LocalDate today, LocalDate tomorrow) {
+
+
+        List<Haksik> haksikList = haksikMapper.getHaksikByRange(today.toString(), tomorrow.toString());
         LocalTime firstHaksikEndTime = LocalTime.of(9, 30);
         LocalTime secondHaksikEndTime = LocalTime.of(14, 0);
 
         List<Haksik> upcomingHaksikList = new ArrayList<>();
 
-        // today와 tomorrow를 LocalDate로 변환
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        LocalDate todayDate = LocalDate.parse(today, formatter);
-        LocalDate tomorrowDate = LocalDate.parse(tomorrow, formatter);
-
         // 요일 확인 (월요일과 금요일에 아침 메뉴가 제공되지 않음)
-        int todayDayOfWeek = todayDate.getDayOfWeek().getValue(); // 1 = 월요일, 5 = 금요일
-        int tomorrowDayOfWeek = tomorrowDate.getDayOfWeek().getValue();
+        int todayDayOfWeek = today.getDayOfWeek().getValue();
 
-        // 현재 시간이 아침 식사 시간 전일 경우
-        if (now.isBefore(firstHaksikEndTime)) {
-
-            upcomingHaksikList.add(haksikList.get(0));
-            upcomingHaksikList.add(haksikList.get(1));
+        if (todayDayOfWeek > 5) {
+            return upcomingHaksikList;
         }
-        // 현재 시간이 점심 시간 전일 경우
-        else if (now.isAfter(firstHaksikEndTime) && now.isBefore(secondHaksikEndTime)) {
-            // 내일 아침이 제공되지 않는다면 점심만 제공
-            if (todayDayOfWeek == 1) {
-                upcomingHaksikList.add(haksikList.get(0));
-                upcomingHaksikList.add(haksikList.get(1));
-            }else{
-                upcomingHaksikList.add(haksikList.get(1));
-                upcomingHaksikList.add(haksikList.get(2));
+
+        if (now.isBefore(firstHaksikEndTime)){
+            if (todayDayOfWeek == 1 || todayDayOfWeek == 5){
+                haksikList.stream()
+                        .filter(haksik -> haksik.getDate().equals(today.toString()) && haksik.getHaksik_type().equals("lunch"))
+                        .forEach(upcomingHaksikList::add);
+                haksikList.stream()
+                        .filter(haksik -> haksik.getDate().equals(tomorrow.toString()) && haksik.getHaksik_type().equals("breakfast"))
+                        .forEach(upcomingHaksikList::add);
+            }
+            else {
+                haksikList.stream()
+                        .filter(haksik -> haksik.getDate().equals(today.toString()) && haksik.getHaksik_type().equals("breakfast"))
+                        .forEach(upcomingHaksikList::add);
+                haksikList.stream()
+                        .filter(haksik -> haksik.getDate().equals(today.toString()) && haksik.getHaksik_type().equals("lunch"))
+                        .forEach(upcomingHaksikList::add);
             }
         }
-        // 현재 시간이 점심 시간 이후일 경우
-        else {
-            // 내일 아침이 제공되지 않는다면 점심만 제공
-            if (tomorrowDayOfWeek == 5) {
-                upcomingHaksikList.add(haksikList.get(2));
+        else if (now.isAfter(firstHaksikEndTime) && now.isBefore(secondHaksikEndTime)){
+            haksikList.stream()
+                    .filter(haksik -> haksik.getDate().equals(today.toString()) && haksik.getHaksik_type().equals("lunch"))
+                    .forEach(upcomingHaksikList::add);
+            if (todayDayOfWeek !=4){
+                haksikList.stream()
+                        .filter(haksik -> haksik.getDate().equals(tomorrow.toString()) && haksik.getHaksik_type().equals("breakfast"))
+                        .forEach(upcomingHaksikList::add);
             }else {
-                upcomingHaksikList.add(haksikList.get(2));
-                upcomingHaksikList.add(haksikList.get(3));
+                haksikList.stream()
+                        .filter(haksik -> haksik.getDate().equals(tomorrow.toString()) && haksik.getHaksik_type().equals("lunch"))
+                        .forEach(upcomingHaksikList::add);
             }
+
+        }
+        else if (now.isAfter(secondHaksikEndTime)){
+            haksikList.stream()
+                    .filter(haksik -> haksik.getDate().equals(tomorrow.toString()) && haksik.getHaksik_type().equals("breakfast"))
+                    .forEach(upcomingHaksikList::add);
+            haksikList.stream()
+                    .filter(haksik -> haksik.getDate().equals(tomorrow.toString()) && haksik.getHaksik_type().equals("lunch"))
+                    .forEach(upcomingHaksikList::add);
+
         }
 
-        return (upcomingHaksikList != null) ? upcomingHaksikList : Collections.emptyList();
+        return upcomingHaksikList;
     }
 
 }
