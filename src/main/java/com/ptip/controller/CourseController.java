@@ -27,26 +27,26 @@ public class CourseController {
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "professor", required = false) String professor,
             @RequestParam(value = "courseNo", required = false) String courseNo,
-            @RequestParam(value = "credit", required = false) String credit,
-            @RequestParam(value = "grade", required = false) String grade,
-            @RequestParam(value = "courseType", required = false) String courseType,
+            @RequestParam(value = "classroom", required = false) String classroom,
             @RequestParam(value = "major", required = false) String major,
+            @RequestParam(value = "grade", required = false) String grade,
+            @RequestParam(value = "credits", required = false) List<String> credits,
+            @RequestParam(value = "courseTypes", required = false) List<String> courseTypes,
             @RequestParam(value = "times", required = false) List<String> times) {
 
-        List<Character> day = new ArrayList<>();
-        List<String> period = new ArrayList<>();
-        System.out.println(times);
+        List<Character> days = new ArrayList<>();
+        List<String> periods = new ArrayList<>();
         if (times != null) {
             for (String time : times) {
-                day.add(time.charAt(0));
+                days.add(time.charAt(0));
                 if (time.length() == 1) {
-                    period.add("123456789");
+                    periods.add("123456789");
                 } else {
-                    period.add(time.substring(1));
+                    periods.add(time.substring(1));
                 }
             }
         }
 
-        return courseService.searchCourse(title, professor, courseNo, credit, grade, courseType, major, day, period);
+        return courseService.searchCourse(title, professor, courseNo, classroom, major, grade, credits, courseTypes, days, periods);
     }
 }

@@ -18,7 +18,7 @@ public class CourseService {
         this.courseMapper = courseMapper;
     }
 
-    public  List<Course> searchCourse(String title, String professor, String courseNo, String credit, String grade, String courseType, String major, List<Character> day, List<String> period) {
-        return courseMapper.selectCourse(title, professor, courseNo, credit, grade, courseType, major, day, period);
+    public  List<Course> searchCourse(String title, String professor, String courseNo, String classroom, String major, String grade, List<String> credits, List<String> courseTypes, List<Character> days, List<String> periods) {
+        return courseMapper.selectCourse(title, professor, courseNo, classroom, major, grade, credits, courseTypes, days, periods);
     }
 }
