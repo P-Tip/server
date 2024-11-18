@@ -15,10 +15,11 @@ public interface CourseMapper {
     List<Course> selectCourse(@Param("title") String title,
                               @Param("professor") String professor,
                               @Param("courseNo") String courseNo,
-                              @Param("credit") String credit,
-                              @Param("grade") String grade,
-                              @Param("courseType") String courseType,
+                              @Param("classroom") String classroom,
                               @Param("major") String major,
-                              @Param("day") List<Character> day,
-                              @Param("period") List<String> period);
+                              @Param("grade") String grade,
+                              @Param("credits") List<String> credits,
+                              @Param("courseTypes") List<String> courseTypes,
+                              @Param("days") List<Character> days,
+                              @Param("periods") List<String> periods);
 }
