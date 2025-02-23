@@ -18,7 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(
                         "https://www.ptutip.p-e.kr",
-                        "https://ptutip.p-e.kr"   // www 없는 버전도 추가
+                        "https://ptutip.p-e.kr",   // www 없는 버전도 추가
+                        "http://localhost:5173"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // 필요한 HTTP 메서드 모두 추가
                 .allowedHeaders("*")
