@@ -4,6 +4,8 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+# application.properties 파일을 git에서 제외
+src/main/resources/application.properties
 
 ### STS ###
 .apt_generated
