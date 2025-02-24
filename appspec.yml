@@ -7,6 +7,9 @@ files:
     destination: /home/ubuntu/server
     overwrite: yes
 
+#이미 있을 경우 덮어쓰기
+file_exists_behavior: OVERWRITE
+
 #files 섹션에서 복사한 파일에 대한 권한 설정
 permissions:
   - object: /
