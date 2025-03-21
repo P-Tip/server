@@ -64,4 +64,66 @@ public interface AwardMapper {
     List<Program> searchPrograms(@Param("name") String name,
                                  @Param("point") Integer point,
                                  @Param("department") String department);
+
+
+
+
+    @Select("<script>" +
+            "SELECT \n" +
+            "    p.id,\n" +
+            "    p.program_name,\n" +
+            "    p.contents,\n" +
+            "    CAST(COALESCE(p.min_point, -1) AS SIGNED) AS min_point,\n" +
+            "    CAST(COALESCE(p.max_point, -1) AS SIGNED) AS max_point,\n" +
+            "    p.department_name,\n" +
+            "    d.internal_num,\n" +
+            "    CASE \n" +
+            "        WHEN p.link IS NULL OR p.link = '' THEN d.info_link\n" +
+            "        ELSE p.link\n" +
+            "    END AS link\n" +
+            "FROM program p\n" +
+            "JOIN department d ON p.department_name = d.department_name\n" +
+            "<where>\n" +
+            "    <if test=\"query != null and query != ''\">\n" +
+            "        (\n" +
+            "            p.program_name LIKE CONCAT('%', #{query}, '%')\n" +
+            "            OR p.contents LIKE CONCAT('%', #{query}, '%')\n" +
+            "            OR p.department_name LIKE CONCAT('%', #{query}, '%')\n" +
+            "        )\n" +
+            "    </if>\n" +
+            "</where>\n" +
+            "<choose>\n" +
+            "    <when test=\"sortColumn != null and sortDirection != null\">\n" +
+            "        ORDER BY ${sortColumn} ${sortDirection}\n" +
+            "    </when>\n" +
+            "    <otherwise>\n" +
+            "        ORDER BY p.id ASC\n" +
+            "    </otherwise>\n" +
+            "</choose>\n" +
+            "LIMIT #{limit} OFFSET #{offset}" +
+            "</script>")
+    List<Program> searchWithPaging(
+            @Param("query") String query,
+            @Param("offset") int offset,
+            @Param("limit") int limit,
+            @Param("sortColumn") String sortColumn,
+            @Param("sortDirection") String sortDirection
+    );
+
+
+    @Select("<script>" +
+            "SELECT COUNT(*)\n" +
+            "    FROM program p\n" +
+            "    JOIN department d ON p.department_name = d.department_name\n" +
+            "    <where>\n" +
+            "        <if test=\"query != null and query != ''\">\n" +
+            "            (\n" +
+            "                p.program_name LIKE CONCAT('%', #{query}, '%')\n" +
+            "                OR p.contents LIKE CONCAT('%', #{query}, '%')\n" +
+            "                OR p.department_name LIKE CONCAT('%', #{query}, '%')\n" +
+            "            )\n" +
+            "        </if>\n" +
+            "    </where>" +
+            "</script>")
+    int countPrograms(@Param("query") String query);
 }

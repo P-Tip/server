@@ -1,5 +1,6 @@
 package com.ptip.controller;
 
+import com.ptip.dto.CustomPageResponse;
 import com.ptip.models.Department;
 import com.ptip.models.Program;
 import com.ptip.service.AwardService;
@@ -7,10 +8,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
 @RestController
@@ -49,5 +52,19 @@ public class AwardController {
             @RequestParam(value = "department", required = false) String department
     ) {
         return awardService.searchPrograms(name, point, department);
+    }
+
+    @Operation(summary = "프로그램을 목록 검색 (페이지네이션)",
+            description = "검색어(query)와 정렬 방식(order)으로 프로그램을 검색하며, 페이지네이션을 적용하여 데이터를 반환합니다." +
+                    "정렬 방식은 point_asc,point_desc")
+    @GetMapping("/searchP")
+    public ResponseEntity<CustomPageResponse<Program>> searchWithPaging(
+            @RequestParam(defaultValue = "") String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "") String order            // 정렬 방식 추후 정리 예정
+    ){
+        CustomPageResponse<Program> response = awardService.searchWithPaging(query,page,order);
+        return ResponseEntity.ok(response);
+
     }
 }
