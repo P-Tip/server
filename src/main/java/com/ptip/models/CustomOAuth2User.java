@@ -1,5 +1,6 @@
 package com.ptip.models;
 
+import com.ptip.models.dto.UserDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -9,9 +10,9 @@ import java.util.Map;
 
 public class CustomOAuth2User implements OAuth2User {
 
-    private final UserDTO userDTO;
+    private final UserDto userDTO;
 
-    public CustomOAuth2User(UserDTO userDTO) {
+    public CustomOAuth2User(UserDto userDTO) {
 
         this.userDTO = userDTO;
     }
@@ -45,7 +46,7 @@ public class CustomOAuth2User implements OAuth2User {
         return userDTO.getName();
     }
 
-    public String getUsername() {
+    public String getUserId() {
 
         return userDTO.getUserId();
     }

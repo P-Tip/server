@@ -3,7 +3,7 @@ package com.ptip.service;
 import com.ptip.entity.UserEntity;
 import com.ptip.models.CustomOAuth2User;
 import com.ptip.models.GoogleResponse;
-import com.ptip.models.UserDTO;
+import com.ptip.models.dto.UserDto;
 import com.ptip.repository.UserRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -26,8 +26,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
-
-
 
         System.out.println(oAuth2User);
 
@@ -67,7 +65,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             userRepository.save(userEntity);
 
-            UserDTO userDTO = new UserDTO();
+            UserDto userDTO = new UserDto();
             userDTO.setUserId(userId);
             userDTO.setName(googleResponse.getName());
             userDTO.setRole("ROLE_USER");
@@ -82,7 +80,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             userRepository.save(existData);
 
-            UserDTO userDTO = new UserDTO();
+            UserDto userDTO = new UserDto();
             userDTO.setUserId(existData.getUserId());
             userDTO.setName(googleResponse.getName());
             userDTO.setRole(existData.getRole());

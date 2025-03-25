@@ -1,9 +1,20 @@
-package com.ptip.models;
+package com.ptip.models.dto;
 
-public class UserDTO {  // API를 만들기 위해
+import org.springframework.stereotype.Component;
+
+@Component
+public class UserDto {  // API를 만들기 위해
     private String userId;
     private String name;
     private String role;
+
+    public UserDto() {}
+
+    public UserDto(String userId, String name, String role) {
+        this.userId = userId;
+        this.name = name;
+        this.role = role;
+    }
 
     public String getUserId() {
         return userId;
@@ -28,4 +39,5 @@ public class UserDTO {  // API를 만들기 위해
     public void setRole(String role) {
         this.role = role;
     }
+
 }
