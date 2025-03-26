@@ -1,4 +1,4 @@
-package com.ptip.handler;
+package com.ptip.auth.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.ptip.models.dto;
+package com.ptip.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.stereotype.Component;

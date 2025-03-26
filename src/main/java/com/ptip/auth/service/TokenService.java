@@ -1,9 +1,9 @@
-package com.ptip.service;
+package com.ptip.auth.service;
 
-import com.ptip.entity.RefreshTokenEntity;
-import com.ptip.jwt.JWTUtil;
-import com.ptip.models.dto.ResponseDto;
-import com.ptip.repository.RefreshTokenRepository;
+import com.ptip.auth.entity.RefreshTokenEntity;
+import com.ptip.auth.jwt.JWTUtil;
+import com.ptip.auth.dto.ResponseDto;
+import com.ptip.auth.repository.RefreshTokenRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -131,7 +131,7 @@ public class TokenService {
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24*60*60);
-        //cookie.setSecure(true);  // https에서 사용
+        cookie.setSecure(true);  // https에서 사용
         //cookie.setPath("/");
         cookie.setHttpOnly(true);
 

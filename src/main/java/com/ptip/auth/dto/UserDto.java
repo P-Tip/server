@@ -1,4 +1,4 @@
-package com.ptip.models.dto;
+package com.ptip.auth.dto;
 
 import org.springframework.stereotype.Component;
 

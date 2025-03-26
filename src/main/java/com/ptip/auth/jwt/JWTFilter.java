@@ -1,7 +1,7 @@
-package com.ptip.jwt;
+package com.ptip.auth.jwt;
 
-import com.ptip.models.CustomOAuth2User;
-import com.ptip.models.dto.UserDto;
+import com.ptip.auth.dto.CustomOAuth2User;
+import com.ptip.auth.dto.UserDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

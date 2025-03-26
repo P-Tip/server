@@ -1,7 +1,7 @@
-package com.ptip.models.dto;
+package com.ptip.auth.dto;
 
-import com.ptip.common.ResponseCode;
-import com.ptip.common.ResponseMessage;
+import com.ptip.auth.common.ResponseCode;
+import com.ptip.auth.common.ResponseMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,5 @@
-package com.ptip.models;
+package com.ptip.auth.dto;
 
-import com.ptip.models.dto.UserDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

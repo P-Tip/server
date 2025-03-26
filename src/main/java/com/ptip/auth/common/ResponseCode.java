@@ -1,4 +1,4 @@
-package com.ptip.common;
+package com.ptip.auth.common;
 
 public interface ResponseCode {
 

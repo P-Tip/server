@@ -1,4 +1,4 @@
-package com.ptip.models;
+package com.ptip.auth.dto;
 
 import java.util.Map;
 

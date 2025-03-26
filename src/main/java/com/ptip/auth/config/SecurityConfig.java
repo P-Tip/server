@@ -1,11 +1,10 @@
-package com.ptip.config;
+package com.ptip.auth.config;
 
-import com.ptip.handler.OAuth2FailureHandler;
-import com.ptip.handler.OAuth2SuccessHandler;
-import com.ptip.jwt.JWTFilter;
-import com.ptip.jwt.JWTUtil;
-import com.ptip.repository.RefreshTokenRepository;
-import com.ptip.service.CustomOAuth2UserService;
+import com.ptip.auth.handler.OAuth2FailureHandler;
+import com.ptip.auth.handler.OAuth2SuccessHandler;
+import com.ptip.auth.jwt.JWTFilter;
+import com.ptip.auth.jwt.JWTUtil;
+import com.ptip.auth.service.CustomOAuth2UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,7 +22,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
-import java.util.Collections;
 
 @Configurable
 @Configuration
@@ -58,7 +55,7 @@ public class SecurityConfig {
 
                 .oauth2Login((oauth2) -> oauth2
                         .authorizationEndpoint(endpoint -> endpoint.baseUri("/api/auth/oauth2"))  //요청경로 변경 http://localhost:8080/api/auth/oauth2/google
-                        .redirectionEndpoint(endpoint -> endpoint.baseUri("/login/oauth2/code/*"))  // /oauth2/callback/*
+                        .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))  // /oauth2/callback/*
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
                         .successHandler(oAuth2SuccessHandler)

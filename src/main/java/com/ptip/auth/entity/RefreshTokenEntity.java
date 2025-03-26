@@ -1,4 +1,4 @@
-package com.ptip.entity;
+package com.ptip.auth.entity;
 
 import jakarta.persistence.*;
 

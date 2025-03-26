@@ -1,9 +1,9 @@
-package com.ptip.handler;
+package com.ptip.auth.handler;
 
-import com.ptip.entity.RefreshTokenEntity;
-import com.ptip.jwt.JWTUtil;
-import com.ptip.models.CustomOAuth2User;
-import com.ptip.repository.RefreshTokenRepository;
+import com.ptip.auth.entity.RefreshTokenEntity;
+import com.ptip.auth.jwt.JWTUtil;
+import com.ptip.auth.dto.CustomOAuth2User;
+import com.ptip.auth.repository.RefreshTokenRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,7 +55,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24*60*60);
-        //cookie.setSecure(true);  // https에서 사용
+        cookie.setSecure(true);  // https에서 사용
         cookie.setPath("/api/auth");
         cookie.setHttpOnly(true);
 

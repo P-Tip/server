@@ -1,6 +1,6 @@
-package com.ptip.repository;
+package com.ptip.auth.repository;
 
-import com.ptip.entity.RefreshTokenEntity;
+import com.ptip.auth.entity.RefreshTokenEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

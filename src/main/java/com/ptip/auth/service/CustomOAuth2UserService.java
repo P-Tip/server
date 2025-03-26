@@ -1,10 +1,10 @@
-package com.ptip.service;
+package com.ptip.auth.service;
 
-import com.ptip.entity.UserEntity;
-import com.ptip.models.CustomOAuth2User;
-import com.ptip.models.GoogleResponse;
-import com.ptip.models.dto.UserDto;
-import com.ptip.repository.UserRepository;
+import com.ptip.auth.entity.UserEntity;
+import com.ptip.auth.dto.CustomOAuth2User;
+import com.ptip.auth.dto.GoogleResponse;
+import com.ptip.auth.dto.UserDto;
+import com.ptip.auth.repository.UserRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;

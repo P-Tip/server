@@ -1,4 +1,4 @@
-package com.ptip.jwt;
+package com.ptip.auth.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

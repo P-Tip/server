@@ -1,11 +1,11 @@
-package com.ptip.controller;
+package com.ptip.auth.controller;
 
-import com.ptip.entity.UserEntity;
-import com.ptip.jwt.JWTUtil;
-import com.ptip.models.dto.ResponseDto;
-import com.ptip.models.dto.UserDto;
-import com.ptip.repository.UserRepository;
-import com.ptip.service.TokenService;
+import com.ptip.auth.entity.UserEntity;
+import com.ptip.auth.jwt.JWTUtil;
+import com.ptip.auth.dto.ResponseDto;
+import com.ptip.auth.dto.UserDto;
+import com.ptip.auth.repository.UserRepository;
+import com.ptip.auth.service.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
