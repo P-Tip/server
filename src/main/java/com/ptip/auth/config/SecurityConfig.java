@@ -63,8 +63,7 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests((auth) -> auth   // 경로별 인가 작업
-                        .requestMatchers("/", "/api/auth/**", "api/award/**").permitAll()
-                        .requestMatchers("/api/admin").hasRole("ROLE_ADMIN")
+                        .requestMatchers("/", "/api/**").permitAll()
                 )
 
         //세션 설정 : STATELESS
