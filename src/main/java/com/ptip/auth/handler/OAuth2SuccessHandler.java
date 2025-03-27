@@ -44,11 +44,19 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String refresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);
 
         //Refresh 토큰 저장
-        addRefreshTokenEntity(userId, refresh, 86400000L);
+        RefreshTokenEntity existData = refreshTokenRepository.findByUserId(userId);
+
+        if (existData == null) {
+            addRefreshTokenEntity(userId, refresh, 86400000L);
+        } else {
+            refreshTokenRepository.delete(existData);
+            addRefreshTokenEntity(userId, refresh, 86400000L);
+        }
 
         response.setHeader("Authorization", "Bearer " + access);
         response.addCookie(createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
+        response.sendRedirect("https://www.ptutip.p-e.kr/signup");
     }
 
     private Cookie createCookie(String key, String value) {

@@ -32,7 +32,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         GoogleResponse googleResponse = null;
 
-        if (registrationId.equals("naver")) {
+        if (registrationId.equals("kakao")) {
 
             return null;
         }

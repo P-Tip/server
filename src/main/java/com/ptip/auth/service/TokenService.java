@@ -119,7 +119,7 @@ public class TokenService {
         Cookie cookie = new Cookie("refresh", null);
         cookie.setMaxAge(0);
         //cookie.setPath("/");
-//        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(true);
 
         response.addCookie(cookie);
         return ResponseDto.success("Logout successful.", null);
