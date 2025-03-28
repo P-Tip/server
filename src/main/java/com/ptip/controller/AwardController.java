@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/award")
@@ -67,20 +69,26 @@ public class AwardController {
 
     @Operation(summary = "프로그램 좋아요 추가", description = "특정 유저가 특정 프로그램에 좋아요를 누릅니다.")
     @PostMapping("/like")
-    public ResponseEntity<String> likeProgram(
+    public ResponseEntity<Map<String, String>> likeProgram(
             @RequestParam("userId") int userId,
             @RequestParam("programId") int programId) {
-        awardService.likeProgram(userId, programId);
-        return ResponseEntity.ok("좋아요 완료");
+        boolean liked = awardService.likeProgram(userId, programId);
+        Map<String, String> response = new HashMap<>();
+        response.put("status", liked ? "liked" : "exists");
+        response.put("message", liked ? "좋아요 완료" : "이미 좋아요한 상태입니다");
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "프로그램 좋아요 취소", description = "특정 유저가 특정 프로그램에 누른 좋아요를 취소합니다.")
     @DeleteMapping("/like")
-    public ResponseEntity<String> unlikeProgram(
+    public ResponseEntity<Map<String, String>> unlikeProgram(
             @RequestParam("userId") int userId,
             @RequestParam("programId") int programId) {
-        awardService.unlikeProgram(userId, programId);
-        return ResponseEntity.ok("좋아요 취소 완료");
+        boolean deleted = awardService.unlikeProgram(userId, programId);
+        Map<String, String> response = new HashMap<>();
+        response.put("status", deleted ? "unliked" : "not_found");
+        response.put("message", deleted ? "좋아요 취소 완료" : "좋아요한 기록이 없습니다");
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "유저가 좋아요한 프로그램 목록 조회", description = "특정 유저가 좋아요 누른 프로그램들의 ID 목록을 반환합니다.")

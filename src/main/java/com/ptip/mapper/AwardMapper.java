@@ -142,4 +142,9 @@ public interface AwardMapper {
     // 좋아요 누른 프로그램 ID 리스트 반환
     @Select("SELECT program_id FROM like_record WHERE user_id = #{userId}")
     List<Integer> selectLikedProgramIds(@Param("userId") int userId);
+
+    // 예외 처리 (좋아요 중복 / 삭제 시 없는 행)
+    @Select("SELECT COUNT(*) > 0 FROM like_record WHERE user_id = #{userId} AND program_id = #{programId}")
+    boolean existsLike(@Param("userId") int userId, @Param("programId") int programId);
+
 }
