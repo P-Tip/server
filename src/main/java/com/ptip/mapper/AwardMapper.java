@@ -2,9 +2,7 @@ package com.ptip.mapper;
 
 import com.ptip.models.Department;
 import com.ptip.models.Program;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -132,4 +130,16 @@ public interface AwardMapper {
             "    </where>" +
             "</script>")
     int countPrograms(@Param("query") String query);
+
+    // 좋아요 추가
+    @Insert("INSERT INTO like_record (user_id, program_id) VALUES (#{userId}, #{programId})")
+    void insertLike(@Param("userId") int userId, @Param("programId") int programId);
+
+    // 좋아요 취소
+    @Delete("DELETE FROM like_record WHERE user_id = #{userId} AND program_id = #{programId}")
+    void deleteLike(@Param("userId") int userId, @Param("programId") int programId);
+
+    // 좋아요 누른 프로그램 ID 리스트 반환
+    @Select("SELECT program_id FROM like_record WHERE user_id = #{userId}")
+    List<Integer> selectLikedProgramIds(@Param("userId") int userId);
 }

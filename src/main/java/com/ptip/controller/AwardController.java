@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -67,4 +64,30 @@ public class AwardController {
         return ResponseEntity.ok(response);
 
     }
+
+    @Operation(summary = "프로그램 좋아요 추가", description = "특정 유저가 특정 프로그램에 좋아요를 누릅니다.")
+    @PostMapping("/like")
+    public ResponseEntity<String> likeProgram(
+            @RequestParam("userId") int userId,
+            @RequestParam("programId") int programId) {
+        awardService.likeProgram(userId, programId);
+        return ResponseEntity.ok("좋아요 완료");
+    }
+
+    @Operation(summary = "프로그램 좋아요 취소", description = "특정 유저가 특정 프로그램에 누른 좋아요를 취소합니다.")
+    @DeleteMapping("/like")
+    public ResponseEntity<String> unlikeProgram(
+            @RequestParam("userId") int userId,
+            @RequestParam("programId") int programId) {
+        awardService.unlikeProgram(userId, programId);
+        return ResponseEntity.ok("좋아요 취소 완료");
+    }
+
+    @Operation(summary = "유저가 좋아요한 프로그램 목록 조회", description = "특정 유저가 좋아요 누른 프로그램들의 ID 목록을 반환합니다.")
+    @GetMapping("/likes")
+    public ResponseEntity<List<Integer>> getLikedProgramIds(
+            @RequestParam("userId") int userId) {
+        return ResponseEntity.ok(awardService.getLikedProgramIds(userId));
+    }
+
 }
