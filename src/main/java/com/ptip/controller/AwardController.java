@@ -1,5 +1,6 @@
 package com.ptip.controller;
 
+import com.ptip.auth.service.TokenService;
 import com.ptip.dto.CustomPageResponse;
 import com.ptip.models.Department;
 import com.ptip.models.Program;
@@ -22,6 +23,8 @@ public class AwardController {
 
     @Autowired
     private AwardService awardService;
+    @Autowired
+    private TokenService tokenService;
 
     @Operation(summary = "ID로 프로그램 검색", description = "프로그램 ID를 기반으로 프로그램을 검색합니다. 빈칸이면 모든 프로그램 출력")
     @GetMapping("")
@@ -67,34 +70,27 @@ public class AwardController {
 
     }
 
-    @Operation(summary = "프로그램 좋아요 추가", description = "특정 유저가 특정 프로그램에 좋아요를 누릅니다.")
-    @PostMapping("/like")
-    public ResponseEntity<Map<String, String>> likeProgram(
-            @RequestParam("userId") int userId,
-            @RequestParam("programId") int programId) {
-        boolean liked = awardService.likeProgram(userId, programId);
-        Map<String, String> response = new HashMap<>();
-        response.put("status", liked ? "liked" : "exists");
-        response.put("message", liked ? "좋아요 완료" : "이미 좋아요한 상태입니다");
-        return ResponseEntity.ok(response);
-    }
+    @Operation(summary = "좋아요 토글", description = "좋아요 상태를 토글합니다. 이미 좋아요한 경우는 취소하고, 아니라면 등록합니다.")
+    @PostMapping("/like/{programId}")
+    public ResponseEntity<Map<String, String>> toggleLike(
+            @PathVariable("programId") int programId,
+            @RequestHeader("Authorization") String token) {
 
-    @Operation(summary = "프로그램 좋아요 취소", description = "특정 유저가 특정 프로그램에 누른 좋아요를 취소합니다.")
-    @DeleteMapping("/like")
-    public ResponseEntity<Map<String, String>> unlikeProgram(
-            @RequestParam("userId") int userId,
-            @RequestParam("programId") int programId) {
-        boolean deleted = awardService.unlikeProgram(userId, programId);
+        int userId = tokenService.getUserIdFromToken(token);  // 토큰에서 userId 추출
+        String status = awardService.toggleLike(userId, programId);
+
         Map<String, String> response = new HashMap<>();
-        response.put("status", deleted ? "unliked" : "not_found");
-        response.put("message", deleted ? "좋아요 취소 완료" : "좋아요한 기록이 없습니다");
+        response.put("status", status);  // liked or unliked
+        response.put("message", status.equals("liked") ? "좋아요 완료" : "좋아요 취소 완료");
+
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "유저가 좋아요한 프로그램 목록 조회", description = "특정 유저가 좋아요 누른 프로그램들의 ID 목록을 반환합니다.")
     @GetMapping("/likes")
     public ResponseEntity<List<Integer>> getLikedProgramIds(
-            @RequestParam("userId") int userId) {
+            @RequestHeader("Authorization") String token) {
+        int userId = tokenService.getUserIdFromToken(token);
         return ResponseEntity.ok(awardService.getLikedProgramIds(userId));
     }
 

@@ -57,22 +57,15 @@ public class AwardService {
         return  new CustomPageResponse<>(programs,total,totalPages,last);
     }
 
-    public boolean likeProgram(int userId, int programId) {
-        boolean exists = awardMapper.existsLike(userId, programId);
-        if (!exists) {
-            awardMapper.insertLike(userId, programId);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean unlikeProgram(int userId, int programId) {
+    public String toggleLike(int userId, int programId) {
         boolean exists = awardMapper.existsLike(userId, programId);
         if (exists) {
             awardMapper.deleteLike(userId, programId);
-            return true;
+            return "unliked";
+        } else {
+            awardMapper.insertLike(userId, programId);
+            return "liked";
         }
-        return false;
     }
 
     public List<Integer> getLikedProgramIds(int userId) {
