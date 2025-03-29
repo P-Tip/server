@@ -1,9 +1,13 @@
 package com.ptip.auth.service;
 
 import com.ptip.auth.entity.RefreshTokenEntity;
+import com.ptip.auth.entity.UserEntity;
+import com.ptip.auth.handler.TokenExpiredException;
+import com.ptip.auth.handler.UserNotFoundException;
 import com.ptip.auth.jwt.JWTUtil;
 import com.ptip.auth.dto.ResponseDto;
 import com.ptip.auth.repository.RefreshTokenRepository;
+import com.ptip.auth.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,10 +20,12 @@ import java.util.Date;
 public class TokenService {
     private final JWTUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final UserRepository userRepository;
 
-    public TokenService(JWTUtil jwtUtil, RefreshTokenRepository refreshTokenRepository) {
+    public TokenService(JWTUtil jwtUtil, RefreshTokenRepository refreshTokenRepository, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.userRepository = userRepository;
     }
 
     //get refresh token
@@ -148,5 +154,28 @@ public class TokenService {
         refreshEntity.setExpirationData(date.toString());
 
         refreshTokenRepository.save(refreshEntity);
+    }
+    
+    // userId 파싱
+    public int getUserIdFromToken(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7); // "Bearer " 제거
+        }
+
+        // ✅ 토큰 만료 시 예외 던짐
+        if (jwtUtil.isExpired(token)) {
+            throw new TokenExpiredException("토큰이 만료되었습니다");
+        }
+
+        // 1. JWT에서 userId 추출 (예: "google_114...")
+        String userIdentifier = jwtUtil.getUserId(token);
+
+        // 2. DB에서 해당 userId에 매핑된 내부 ID 조회
+        UserEntity user = userRepository.findByUserId(userIdentifier);
+        if (user == null) {
+            throw new UserNotFoundException("유저 정보를 찾을 수 없습니다");
+        }
+
+        return user.getId(); // 내부 정수형 PK 반환
     }
 }

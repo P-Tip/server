@@ -1,5 +1,6 @@
 package com.ptip.controller;
 
+import com.ptip.auth.service.TokenService;
 import com.ptip.dto.CustomPageResponse;
 import com.ptip.models.Department;
 import com.ptip.models.Program;
@@ -9,12 +10,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/award")
@@ -23,6 +23,8 @@ public class AwardController {
 
     @Autowired
     private AwardService awardService;
+    @Autowired
+    private TokenService tokenService;
 
     @Operation(summary = "ID로 프로그램 검색", description = "프로그램 ID를 기반으로 프로그램을 검색합니다. 빈칸이면 모든 프로그램 출력")
     @GetMapping("")
@@ -67,4 +69,29 @@ public class AwardController {
         return ResponseEntity.ok(response);
 
     }
+
+    @Operation(summary = "좋아요 토글", description = "좋아요 상태를 토글합니다. 이미 좋아요한 경우는 취소하고, 아니라면 등록합니다.")
+    @PostMapping("/like/{programId}")
+    public ResponseEntity<Map<String, String>> toggleLike(
+            @PathVariable("programId") int programId,
+            @RequestHeader("Authorization") String token) {
+
+        int userId = tokenService.getUserIdFromToken(token);  // 토큰에서 userId 추출
+        String status = awardService.toggleLike(userId, programId);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("status", status);  // liked or unliked
+        response.put("message", status.equals("liked") ? "좋아요 완료" : "좋아요 취소 완료");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "유저가 좋아요한 프로그램 목록 조회", description = "특정 유저가 좋아요 누른 프로그램들의 ID 목록을 반환합니다.")
+    @GetMapping("/likes")
+    public ResponseEntity<List<Integer>> getLikedProgramIds(
+            @RequestHeader("Authorization") String token) {
+        int userId = tokenService.getUserIdFromToken(token);
+        return ResponseEntity.ok(awardService.getLikedProgramIds(userId));
+    }
+
 }

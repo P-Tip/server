@@ -56,4 +56,20 @@ public class AwardService {
         boolean last = (page+1) >= totalPages;
         return  new CustomPageResponse<>(programs,total,totalPages,last);
     }
+
+    public String toggleLike(int userId, int programId) {
+        boolean exists = awardMapper.existsLike(userId, programId);
+        if (exists) {
+            awardMapper.deleteLike(userId, programId);
+            return "unliked";
+        } else {
+            awardMapper.insertLike(userId, programId);
+            return "liked";
+        }
+    }
+
+    public List<Integer> getLikedProgramIds(int userId) {
+        return awardMapper.selectLikedProgramIds(userId);
+    }
+
 }

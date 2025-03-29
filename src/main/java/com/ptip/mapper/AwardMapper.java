@@ -2,9 +2,7 @@ package com.ptip.mapper;
 
 import com.ptip.models.Department;
 import com.ptip.models.Program;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -15,7 +13,7 @@ public interface AwardMapper {
     @Select("SELECT p.id, p.program_name, p.contents, " +
             "       COALESCE(p.min_point, '미정') AS min_point, " +
             "       COALESCE(p.max_point, '미정') AS max_point, " +
-            "       p.department_name, d.internal_num, p.link " +
+            "       p.department_name, d.internal_num, p.link, p.end_date " +
             "FROM program p " +
             "JOIN department d ON p.department_name = d.department_name " +
             "WHERE (p.id = #{id} OR #{id} IS NULL)" +
@@ -52,7 +50,7 @@ public interface AwardMapper {
             "SELECT p.id, p.program_name, p.contents, " +
             "       COALESCE(p.min_point, '미정') AS min_point, " +
             "       COALESCE(p.max_point, '미정') AS max_point, " +
-            "       p.department_name, d.internal_num, p.link " +
+            "       p.department_name, d.internal_num, p.link, p.end_date " +
             "FROM program p " +
             "JOIN department d ON p.department_name = d.department_name " +
             "WHERE 1=1 " +
@@ -132,4 +130,21 @@ public interface AwardMapper {
             "    </where>" +
             "</script>")
     int countPrograms(@Param("query") String query);
+
+    // 좋아요 추가
+    @Insert("INSERT INTO like_record (user_id, program_id) VALUES (#{userId}, #{programId})")
+    void insertLike(@Param("userId") int userId, @Param("programId") int programId);
+
+    // 좋아요 취소
+    @Delete("DELETE FROM like_record WHERE user_id = #{userId} AND program_id = #{programId}")
+    void deleteLike(@Param("userId") int userId, @Param("programId") int programId);
+
+    // 좋아요 누른 프로그램 ID 리스트 반환
+    @Select("SELECT program_id FROM like_record WHERE user_id = #{userId}")
+    List<Integer> selectLikedProgramIds(@Param("userId") int userId);
+
+    // 예외 처리 (좋아요 중복 / 삭제 시 없는 행)
+    @Select("SELECT COUNT(*) > 0 FROM like_record WHERE user_id = #{userId} AND program_id = #{programId}")
+    boolean existsLike(@Param("userId") int userId, @Param("programId") int programId);
+
 }
