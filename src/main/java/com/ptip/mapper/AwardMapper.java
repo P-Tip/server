@@ -13,7 +13,7 @@ public interface AwardMapper {
     @Select("SELECT p.id, p.program_name, p.contents, " +
             "       COALESCE(p.min_point, '미정') AS min_point, " +
             "       COALESCE(p.max_point, '미정') AS max_point, " +
-            "       p.department_name, d.internal_num, p.link " +
+            "       p.department_name, d.internal_num, p.link, p.end_date " +
             "FROM program p " +
             "JOIN department d ON p.department_name = d.department_name " +
             "WHERE (p.id = #{id} OR #{id} IS NULL)" +
@@ -50,7 +50,7 @@ public interface AwardMapper {
             "SELECT p.id, p.program_name, p.contents, " +
             "       COALESCE(p.min_point, '미정') AS min_point, " +
             "       COALESCE(p.max_point, '미정') AS max_point, " +
-            "       p.department_name, d.internal_num, p.link " +
+            "       p.department_name, d.internal_num, p.link, p.end_date " +
             "FROM program p " +
             "JOIN department d ON p.department_name = d.department_name " +
             "WHERE 1=1 " +
