@@ -8,6 +8,7 @@ public record Program(
         int max_point,
         String department_name,
         String internalNum,
-        String link
+        String link,
+        String end_date
 ) {
 }

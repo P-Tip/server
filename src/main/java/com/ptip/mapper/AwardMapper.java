@@ -80,19 +80,25 @@ public interface AwardMapper {
             "    CASE \n" +
             "        WHEN p.link IS NULL OR p.link = '' THEN d.info_link\n" +
             "        ELSE p.link\n" +
-            "    END AS link\n" +
+            "    END AS link,\n" +
+            "    p.end_date \n" +
             "FROM program p\n" +
             "JOIN department d ON p.department_name = d.department_name\n" +
             "<where>\n" +
             "    <if test=\"query != null and query != ''\">\n" +
-            "        (\n" +
-            "            p.program_name LIKE CONCAT('%', #{query}, '%')\n" +
-            "            OR p.contents LIKE CONCAT('%', #{query}, '%')\n" +
-            "            OR p.department_name LIKE CONCAT('%', #{query}, '%')\n" +
-            "        )\n" +
+            "        p.program_name LIKE CONCAT('%', #{query}, '%')\n" +
             "    </if>\n" +
             "</where>\n" +
             "<choose>\n" +
+            "    <when test=\"sortColumn == 'end_date'\">\n" +
+            "        ORDER BY \n" +
+            "            CASE \n" +
+            "                WHEN p.end_date >= CURRENT_DATE THEN 0 \n" +
+            "                WHEN p.end_date IS NULL THEN 1 \n" +
+            "                ELSE 2 \n" +
+            "            END,\n" +
+            "            p.end_date ASC\n" +
+            "    </when>\n" +
             "    <when test=\"sortColumn != null and sortDirection != null\">\n" +
             "        ORDER BY ${sortColumn} ${sortDirection}\n" +
             "    </when>\n" +

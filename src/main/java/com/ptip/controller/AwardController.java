@@ -55,8 +55,8 @@ public class AwardController {
     }
 
     @Operation(summary = "프로그램을 목록 검색 (페이지네이션)",
-            description = "검색어(query)와 정렬 방식(order)으로 프로그램을 검색하며, 페이지네이션을 적용하여 데이터를 반환합니다." +
-                    "정렬 방식은 point_asc,point_desc")
+            description = "검색어(query)와 정렬 방식(order)으로 프로그램을 검색하며, 페이지네이션을 적용하여 데이터를 반환합니다.\n" +
+                    "정렬 방식은 point_asc(포인트 오름차순), point_desc(포인트 내림차순), end_date(마감일순) 세가지가 있습니다.")
     @GetMapping("/searchP")
     public ResponseEntity<CustomPageResponse<Program>> searchWithPaging(
             @RequestParam(defaultValue = "") String query,

@@ -45,6 +45,9 @@ public class AwardService {
         } else if (order.equalsIgnoreCase("point_asc")) {
             sortColumn = "min_point";
             sortDirection = "ASC";
+        } else if (order.equalsIgnoreCase("end_date")) {
+            sortColumn = "end_date";
+            sortDirection = "";
         }
         System.out.println("정렬 기준: " + sortColumn + ", 방향: " + sortDirection);
         List<Program> programs = awardMapper.searchWithPaging(query, offset, size, sortColumn, sortDirection);
