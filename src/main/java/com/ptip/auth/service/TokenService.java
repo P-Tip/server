@@ -2,7 +2,6 @@ package com.ptip.auth.service;
 
 import com.ptip.auth.entity.RefreshTokenEntity;
 import com.ptip.auth.entity.UserEntity;
-import com.ptip.auth.handler.TokenExpiredException;
 import com.ptip.auth.handler.UserNotFoundException;
 import com.ptip.auth.jwt.JWTUtil;
 import com.ptip.auth.dto.ResponseDto;
@@ -21,6 +20,7 @@ public class TokenService {
     private final JWTUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
+    private static final int BEARER_PREFIX_LENGTH = "Bearer ".length();
 
     public TokenService(JWTUtil jwtUtil, RefreshTokenRepository refreshTokenRepository, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
@@ -159,12 +159,7 @@ public class TokenService {
     // userId 파싱
     public int getUserIdFromToken(String token) {
         if (token.startsWith("Bearer ")) {
-            token = token.substring(7); // "Bearer " 제거
-        }
-
-        // ✅ 토큰 만료 시 예외 던짐
-        if (jwtUtil.isExpired(token)) {
-            throw new TokenExpiredException("토큰이 만료되었습니다");
+            token = token.substring(BEARER_PREFIX_LENGTH); // "Bearer " 제거
         }
 
         // 1. JWT에서 userId 추출 (예: "google_114...")
@@ -173,7 +168,7 @@ public class TokenService {
         // 2. DB에서 해당 userId에 매핑된 내부 ID 조회
         UserEntity user = userRepository.findByUserId(userIdentifier);
         if (user == null) {
-            throw new UserNotFoundException("유저 정보를 찾을 수 없습니다");
+            throw new UserNotFoundException("해당 토큰의 유저 정보를 찾을 수 없습니다. 회원가입 여부를 확인해주세요.");
         }
 
         return user.getId(); // 내부 정수형 PK 반환

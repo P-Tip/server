@@ -1,5 +1,6 @@
 package com.ptip.auth.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,36 +17,35 @@ public class JWTUtil {
     private SecretKey secretKey;
 
     public JWTUtil(@Value("${spring.jwt.secret}") String secret) {  // 속성 가져오는 어노테이션
-        secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());  // 암호화 방식 HS256으로 설정
+        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());  // 암호화 방식 HS256으로 설정
     }
 
     public String getCategory(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
+        return parseToken(token).get("category", String.class);
     }
 
     public String getUserId(String token) {  // username 학인하기 위해
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userId", String.class);
+        return parseToken(token).get("userId", String.class);
     }
 
     public String getRole(String token) {  // role 학인하기 위해
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+        return parseToken(token).get("role", String.class);
     }
 
-    public Boolean isExpired(String token) {  // 토큰이 만료되었는지 확인
-
+    public boolean isExpired(String token) {
         try {
-             return Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .getExpiration()
-                    .before(new Date());
-
+            return parseToken(token).getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
             return true;
         }
+    }
 
+    private Claims parseToken(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     public String createJwt(String category, String userId, String role, Long expiredMs) {  // 토큰 생성

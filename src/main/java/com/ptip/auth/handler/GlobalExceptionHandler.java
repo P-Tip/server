@@ -10,26 +10,21 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<?> handleTokenExpired(TokenExpiredException ex) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("error", "TOKEN_EXPIRED", "message", ex.getMessage()));
-    }
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity<?> handleCustomExceptions(RuntimeException ex) {
+        HttpStatus status;
+        String error;
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<?> handleUserNotFound(UserNotFoundException ex) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(Map.of("error", "USER_NOT_FOUND", "message", ex.getMessage()));
-    }
+        if (ex instanceof UserNotFoundException) {
+            status = HttpStatus.NOT_FOUND;
+            error = "USER_NOT_FOUND";
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            error = "UNKNOWN_ERROR";
+        }
 
-    // 예외 안 나눴을 경우 대비 (optional)
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception ex) {
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "SERVER_ERROR", "message", ex.getMessage()));
+                .status(status)
+                .body(Map.of("error", error, "message", ex.getMessage()));
     }
 }
-
