@@ -51,9 +51,9 @@ public class TokenService {
 
 
         // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
-        String category = jwtUtil.getCategory(refreshToken);
+        String type = jwtUtil.getType(refreshToken);
 
-        if (!category.equals("refresh")) {
+        if (!type.equals("refresh")) {
 
             //response status code
             return ResponseDto.invalidToken("Invalid refresh token.");
@@ -68,18 +68,18 @@ public class TokenService {
         }
 
         String userId = jwtUtil.getUserId(refreshToken);
-        String role = jwtUtil.getRole(refreshToken);
+        UserEntity existData = userRepository.findByUserId(userId);
 
         //make new JWT
-        String newAccess = jwtUtil.createJwt("access", userId, role, 600000L);
-        String newRefresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);
+        String newAccess = jwtUtil.createJwt("access", userId, existData.getName(), existData.getRole(), 600000L);
+        String newRefresh = jwtUtil.createJwt("refresh", userId, null, null, 86400000L);
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
         refreshTokenRepository.deleteByToken(refreshToken);
         addRefreshTokenEntity(userId, newRefresh, 86400000L);
 
         //response
-        response.setHeader("access", newAccess);
+        response.setHeader("Authorization", "Bearer " + newAccess);
         response.addCookie(createCookie("refresh", newRefresh));
         return ResponseDto.success("New access token generated.", null);
     }
@@ -104,8 +104,8 @@ public class TokenService {
         }
 
         // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
-        String category = jwtUtil.getCategory(refreshToken);
-        if (!category.equals("refresh")) {
+        String type = jwtUtil.getType(refreshToken);
+        if (!type.equals("refresh")) {
 
             return ResponseDto.invalidToken("Invalid refresh token.");
         }

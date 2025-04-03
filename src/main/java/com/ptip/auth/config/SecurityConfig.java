@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -54,8 +55,8 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)  // JWTFilter 추가
 
                 .oauth2Login((oauth2) -> oauth2
-                        .authorizationEndpoint(endpoint -> endpoint.baseUri("/api/auth/oauth2"))  //요청경로 변경 http://localhost:8080/api/auth/oauth2/google
-                        .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))  // /oauth2/callback/*
+                        .authorizationEndpoint(endpoint -> endpoint.baseUri("/api/auth/oauth2"))  // 요청경로 변경 /api/auth/oauth2/google
+                        .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))   // 콜백경로 변경 /oauth2/callback/*
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
                         .successHandler(oAuth2SuccessHandler)
@@ -63,14 +64,12 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests((auth) -> auth   // 경로별 인가 작업
-//                        .requestMatchers("/", "/api/**", "/swagger/**", "/swagger-ui/**").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/", "/api/**", "/api-docs/**", "/swagger", "/swagger-ui/**").permitAll()
                 )
 
                 //세션 설정 : STATELESS
-//        http
-//                .sessionManagement((session) -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement((session) -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .exceptionHandling(exceptionHandle -> exceptionHandle
                         .authenticationEntryPoint(new FailedAuthenticationEntryPoint())

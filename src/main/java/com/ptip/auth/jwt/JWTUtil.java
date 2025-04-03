@@ -14,18 +14,22 @@ import java.util.Date;
 
 @Component
 public class JWTUtil {
-    private SecretKey secretKey;
+    private final SecretKey secretKey;
 
     public JWTUtil(@Value("${spring.jwt.secret}") String secret) {  // 속성 가져오는 어노테이션
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());  // 암호화 방식 HS256으로 설정
     }
 
-    public String getCategory(String token) {
-        return parseToken(token).get("category", String.class);
+    public String getType(String token) {
+        return parseToken(token).get("type", String.class);
     }
 
     public String getUserId(String token) {  // username 학인하기 위해
-        return parseToken(token).get("userId", String.class);
+        return parseToken(token).get("user_id", String.class);
+    }
+
+    public  String getName(String token) {
+        return parseToken(token).get("name", String.class);
     }
 
     public String getRole(String token) {  // role 학인하기 위해
@@ -48,10 +52,14 @@ public class JWTUtil {
                 .getPayload();
     }
 
-    public String createJwt(String category, String userId, String role, Long expiredMs) {  // 토큰 생성
+    public String createJwt(String type, String userId, String name, String role, Long expiredMs) {  // 토큰 생성
+
         return Jwts.builder()
-                .claim("category", category)
-                .claim("userId", userId)
+                .header().add("typ", "JWT")
+                .and()
+                .claim("type", type)
+                .claim("user_id", userId)
+                .claim("name", name)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))

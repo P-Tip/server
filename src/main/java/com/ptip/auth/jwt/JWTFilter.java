@@ -13,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -53,7 +52,7 @@ public class JWTFilter extends OncePerRequestFilter {
             }
 
             // access 토큰인지 확인
-            String category = jwtUtil.getCategory(token);
+            String category = jwtUtil.getType(token);
             if (!category.equals("access")) {
                 setErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
                         "INVALID_TOKEN_TYPE", "Access 토큰이 아닙니다.");

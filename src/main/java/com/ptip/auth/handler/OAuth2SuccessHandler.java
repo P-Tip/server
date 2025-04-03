@@ -34,14 +34,15 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
         String userId = customUserDetails.getUserId();
+        String name = customUserDetails.getName();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt("access", userId, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);
+        String access = jwtUtil.createJwt("access", userId, name, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh", userId, null, null, 86400000L);
 
         //Refresh 토큰 저장
         RefreshTokenEntity existData = refreshTokenRepository.findByUserId(userId);
