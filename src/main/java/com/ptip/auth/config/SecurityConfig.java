@@ -23,6 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
+import java.util.List;
 
 @Configurable
 @Configuration
@@ -48,7 +49,7 @@ public class SecurityConfig {
                 .cors(corsCustomizer -> corsCustomizer
                         .configurationSource(corsConfigurationSource()))
 
-                .csrf((auth) -> auth.disable())             // csrf disable csrf공격에 대한 방어를 하기 위해 사용
+                .csrf((auth) -> auth.disable())             // csrf disable csrf 공격에 대한 방어를 하기 위해 사용
                 .formLogin((auth) -> auth.disable())   // From 로그인 방식 disable
                 .httpBasic((auth) -> auth.disable())   // HTTP Basic 인증 방식 disable
 
@@ -81,13 +82,19 @@ public class SecurityConfig {
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
 
-        CorsConfiguration CorsConfiguration = new CorsConfiguration();
-        CorsConfiguration.addAllowedOrigin("*");
-        CorsConfiguration.addAllowedMethod("*");
-        CorsConfiguration.addAllowedHeader("*");
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(List.of(
+                "https://www.ptutip.p-e.kr",
+                "https://ptutip.p-e.kr",
+                "http://localhost:5173"
+        ));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(List.of("Authorization"));
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", CorsConfiguration);
+        source.registerCorsConfiguration("/api/**", corsConfiguration);
 
         return source;
     }
