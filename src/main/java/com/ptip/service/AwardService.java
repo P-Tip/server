@@ -1,6 +1,7 @@
 package com.ptip.service;
 
 import com.ptip.dto.CustomPageResponse;
+import com.ptip.dto.LikedProgramsRequestDto;
 import com.ptip.mapper.AwardMapper;
 import com.ptip.models.Department;
 import com.ptip.models.Program;
@@ -70,6 +71,17 @@ public class AwardService {
 
     public List<Integer> getLikedProgramIds(int userId) {
         return awardMapper.selectLikedProgramIds(userId);
+    }
+
+    public String addLikedPrograms(int userId, LikedProgramsRequestDto requestDto) {
+        for(int likedProgram : requestDto.getLikedPrograms()){
+            boolean exists = awardMapper.existsLike(userId, likedProgram);
+            if (exists) {
+                continue;
+            }
+            awardMapper.insertLike(userId, likedProgram);
+        }
+        return "성공적으로 좋아요한 프로그램들을 추가하였습니다.";
     }
 
 }

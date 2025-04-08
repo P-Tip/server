@@ -2,6 +2,7 @@ package com.ptip.controller;
 
 import com.ptip.auth.service.TokenService;
 import com.ptip.dto.CustomPageResponse;
+import com.ptip.dto.LikedProgramsRequestDto;
 import com.ptip.models.Department;
 import com.ptip.models.Program;
 import com.ptip.service.AwardService;
@@ -92,6 +93,16 @@ public class AwardController {
             @RequestHeader("Authorization") String token) {
         int userId = tokenService.getUserIdFromToken(token);
         return ResponseEntity.ok(awardService.getLikedProgramIds(userId));
+    }
+
+    @Operation(summary = "유저가 좋아요한 프로그램들 한번에 추가", description = "유저가 좋아요를 누른 프로그램들을 리스트 형식으로 받아서 DB에 저장합니다.")
+    @PostMapping("/like/add")
+    public ResponseEntity<?> addLikedPrograms(
+            @RequestHeader("Authorization") String token,
+            @RequestBody LikedProgramsRequestDto requestDto
+    ){
+        int userId = tokenService.getUserIdFromToken(token);
+        return ResponseEntity.ok(awardService.addLikedPrograms(userId, requestDto));
     }
 
 }
